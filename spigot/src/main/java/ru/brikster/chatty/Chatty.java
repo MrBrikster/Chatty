@@ -193,7 +193,7 @@ public final class Chatty extends JavaPlugin {
 
         if (this.asyncCommandManager == null) {
             initAsyncCommandManager();
-            registerPmCommands(commandSuggestionsProvider);
+            if (pmConfig.isEnable()) registerPmCommands(commandSuggestionsProvider);
             registerIgnoreCommand(commandSuggestionsProvider);
             registerClearChatCommand();
         }
