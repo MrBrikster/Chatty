@@ -31,10 +31,14 @@ subprojects {
     repositories {
         mavenCentral()
         maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+        maven {
+            name = "sonatype-oss-snapshots1"
+            url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
 
-    def adventureVersion = "4.15.0"
-    def adventureBukkitPlatformVersion = "4.3.2"
+    def adventureVersion = "4.17.0"
+    def adventureBukkitPlatformVersion = "4.3.3-SNAPSHOT"
 
     dependencies {
         compileOnlyApi 'org.jetbrains:annotations:17.0.0'
