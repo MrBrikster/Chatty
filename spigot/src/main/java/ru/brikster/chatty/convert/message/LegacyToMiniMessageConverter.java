@@ -14,7 +14,7 @@ public final class LegacyToMiniMessageConverter implements MessageConverter {
     private static final Pattern BUKKIT_COLOR_PATTERN = Pattern.compile("(?i)[§&][A-FK-OR\\d]");
     private static final Pattern SPIGOT_HEX_COLOR_PATTERN = Pattern.compile("(?i)[§&]X([§&][A-F\\d]){6}");
     private static final Pattern PAPER_HEX_COLOR_PATTERN = Pattern.compile("(?i)[§&]#([A-F\\d]){6}");
-    private static final Pattern SIMPLIFIED_PAPER_HEX_COLOR_PATTERN = Pattern.compile("(?i)#([A-F\\d]){6}");
+    private static final Pattern SIMPLIFIED_PAPER_HEX_COLOR_PATTERN = Pattern.compile("(?<!<color:)(?i)#([A-F\\d]){6}");
 
     private static final Pattern CHATTY_HEX_COLOR_PATTERN = Pattern.compile("(?i)\\{#([A-F\\d]{6})}");
     private static final Pattern CHATTY_HEX_GRADIENT_PATTERN = Pattern.compile("(?i)\\{#([A-F\\d]{6})(:#([A-F\\d]{6}))+( )([^{}])*(})");
