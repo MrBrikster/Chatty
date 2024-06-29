@@ -29,6 +29,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.brikster.chatty.adventure.NativeBukkitAudienceProvider;
 import ru.brikster.chatty.api.ChattyApiImpl;
 import ru.brikster.chatty.api.event.ChattyInitEvent;
 import ru.brikster.chatty.chat.executor.LegacyEventExecutor;
@@ -55,6 +58,7 @@ import ru.brikster.chatty.proxy.ProxyService;
 import ru.brikster.chatty.repository.player.PlayerDataRepository;
 import ru.brikster.chatty.util.AdventureUtil;
 import ru.brikster.chatty.util.ListenerUtil;
+import ru.brikster.chatty.util.PaperUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,6 +70,7 @@ import java.util.logging.Level;
 
 public final class Chatty extends JavaPlugin {
 
+    private static final Logger log = LoggerFactory.getLogger(Chatty.class);
     private final Map<String, ProxyingCommandHandler<CommandSender>> proxyingCommandHandlerMap = new ConcurrentHashMap<>();
 
     private Injector injector;
@@ -134,7 +139,16 @@ public final class Chatty extends JavaPlugin {
     }
 
     private void initialize() throws Exception {
-        ChattyInitEvent initEvent = new ChattyInitEvent(BukkitAudiences.create(this));
+        BukkitAudiences audiences;
+        if (PaperUtil.isPaper() && PaperUtil.isSupportAdventure()) {
+            getLogger().log(Level.INFO, "Using native Adventure audience provider");
+            audiences = new NativeBukkitAudienceProvider();
+        } else {
+            getLogger().log(Level.INFO, "Using bundled Adventure audience provider");
+            audiences = BukkitAudiences.create(this);
+        }
+
+        ChattyInitEvent initEvent = new ChattyInitEvent(audiences);
         getServer().getPluginManager().callEvent(initEvent);
 
         this.injector = Guice.createInjector(new GeneralGuiceModule(
