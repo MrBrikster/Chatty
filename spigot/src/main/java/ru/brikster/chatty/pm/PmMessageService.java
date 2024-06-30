@@ -53,13 +53,20 @@ public class PmMessageService {
             .expireAfterAccess(Duration.ofMinutes(10))
             .build();
 
-    public @Nullable PmMessageTarget resolveTarget(String targetName, boolean allowConsole) {
+    public @Nullable PmMessageTarget resolveTarget(CommandSender sender,
+                                                   String targetName,
+                                                   boolean allowConsole) {
         PmMessageTarget target = null;
         if (allowConsole && pmConfig.isAllowConsole() && targetName.equalsIgnoreCase("Console")) {
             target = new CommandSenderPmMessageTarget(Bukkit.getConsoleSender());
         } else {
             Player targetPlayer = Bukkit.getPlayer(targetName);
             if (targetPlayer != null) {
+                // return null if target is vanished
+                if (sender instanceof Player
+                    && !((Player) sender).canSee(targetPlayer)) {
+                    return null;
+                }
                 target = new CommandSenderPmMessageTarget(targetPlayer);
             }
         }

@@ -24,7 +24,7 @@ public final class MsgCommandHandler implements CommandExecutionHandler<CommandS
         CommandSender sender = commandContext.getSender();
 
         String targetName = commandContext.get("target");
-        PmMessageTarget target = pmMessageService.resolveTarget(targetName, true);
+        PmMessageTarget target = pmMessageService.resolveTarget(sender, targetName, true);
         if (target == null) {
             audiences.sender(sender).sendMessage(messagesConfig.getPmPlayerNotFound());
             return;

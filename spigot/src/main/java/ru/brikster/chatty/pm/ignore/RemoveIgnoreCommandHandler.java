@@ -31,7 +31,7 @@ public final class RemoveIgnoreCommandHandler implements CommandExecutionHandler
 
         UUID targetUuid;
 
-        PmMessageTarget target = pmMessageService.resolveTarget(targetName, false);
+        PmMessageTarget target = pmMessageService.resolveTarget(sender, targetName, false);
         if (target == null) {
             targetUuid = repository.getCachedUuid(targetName);
         } else {
