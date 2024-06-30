@@ -14,7 +14,6 @@ public final class LegacyToMiniMessageConverter implements MessageConverter {
     private static final Pattern BUKKIT_COLOR_PATTERN = Pattern.compile("(?i)[§&][A-FK-OR\\d]");
     private static final Pattern SPIGOT_HEX_COLOR_PATTERN = Pattern.compile("(?i)[§&]X([§&][A-F\\d]){6}");
     private static final Pattern PAPER_HEX_COLOR_PATTERN = Pattern.compile("(?i)[§&]#([A-F\\d]){6}");
-    private static final Pattern SIMPLIFIED_PAPER_HEX_COLOR_PATTERN = Pattern.compile("(?<!<color:)(?i)#([A-F\\d]){6}");
 
     private static final Pattern CHATTY_HEX_COLOR_PATTERN = Pattern.compile("(?i)\\{#([A-F\\d]{6})}");
     private static final Pattern CHATTY_HEX_GRADIENT_PATTERN = Pattern.compile("(?i)\\{#([A-F\\d]{6})(:#([A-F\\d]{6}))+( )([^{}])*(})");
@@ -57,7 +56,6 @@ public final class LegacyToMiniMessageConverter implements MessageConverter {
         convertedMessage = convertChattyHexCodes(convertedMessage);
         convertedMessage = convertPaperHexCodes(convertedMessage);
         convertedMessage = convertSpigotHexCodes(convertedMessage);
-        convertedMessage = convertSimplifiedPaperHexCodes(convertedMessage);
         convertedMessage = convertBukkitCodes(convertedMessage);
         return convertedMessage;
     }
@@ -68,19 +66,6 @@ public final class LegacyToMiniMessageConverter implements MessageConverter {
         StringBuilder builder = new StringBuilder();
         while (matcher.find()) {
             String hex = matcher.group().substring(2);
-            matcher.appendReplacement(builder, RESET_TAGS + "<color:#" + hex + ">");
-        }
-        matcher.appendTail(builder);
-
-        return builder.toString();
-    }
-
-    private @NotNull String convertSimplifiedPaperHexCodes(@NotNull String message) {
-        Matcher matcher = SIMPLIFIED_PAPER_HEX_COLOR_PATTERN.matcher(message);
-
-        StringBuilder builder = new StringBuilder();
-        while (matcher.find()) {
-            String hex = matcher.group().substring(1);
             matcher.appendReplacement(builder, RESET_TAGS + "<color:#" + hex + ">");
         }
         matcher.appendTail(builder);
