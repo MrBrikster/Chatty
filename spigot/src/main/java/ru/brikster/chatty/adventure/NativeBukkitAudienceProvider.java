@@ -9,56 +9,65 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Predicate;
 
-@SuppressWarnings("rawtypes")
 public final class NativeBukkitAudienceProvider implements BukkitAudiences {
 
     @Override
     public @NotNull Audience all() {
-        //noinspection unchecked
-        List<Audience> audienceList = new ArrayList<>(
-                (Collection) Bukkit.getOnlinePlayers());
-        audienceList.add((Audience) Bukkit.getConsoleSender());
+        List<Audience> audienceList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            audienceList.add(new NativeAudienceAdapter(player));
+        }
+        audienceList.add(new NativeAudienceAdapter(Bukkit.getConsoleSender()));
         return Audience.audience(audienceList);
     }
 
     @Override
     public @NotNull Audience console() {
-        return (Audience) Bukkit.getConsoleSender();
+        return new NativeAudienceAdapter(Bukkit.getConsoleSender());
     }
 
     @Override
     public @NotNull Audience players() {
-        //noinspection unchecked
-        return Audience.audience(
-                (Collection) Bukkit.getOnlinePlayers());
+        List<Audience> audienceList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            audienceList.add(new NativeAudienceAdapter(player));
+        }
+        return Audience.audience(audienceList);
     }
 
     @Override
     public @NotNull Audience player(@NotNull UUID playerId) {
-        return Audience.audience((Audience) Objects.requireNonNull(Bukkit.getPlayer(playerId),
+        return new NativeAudienceAdapter(Objects.requireNonNull(Bukkit.getPlayer(playerId),
                 "Cannot find player"));
     }
 
     @Override
     public @NotNull Audience permission(@NotNull String permission) {
-        List<CommandSender> audienceList = new ArrayList<>(
-                Bukkit.getOnlinePlayers());
-        audienceList.add(Bukkit.getConsoleSender());
-        audienceList.removeIf(sender -> !sender.hasPermission(permission));
-        //noinspection unchecked
-        return Audience.audience((Collection) audienceList);
+        List<Audience> audienceList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission(permission)) {
+                audienceList.add(new NativeAudienceAdapter(player));
+            }
+        }
+        audienceList.add(new NativeAudienceAdapter(Bukkit.getConsoleSender()));
+        return Audience.audience(audienceList);
     }
 
     @Override
     public @NotNull Audience world(@NotNull Key world) {
-        List<Player> audienceList = new ArrayList<>(
-                Bukkit.getOnlinePlayers());
-        audienceList.removeIf(player -> !player.getWorld().getName().equals(world.asString()));
-        //noinspection unchecked
-        return Audience.audience((Collection) audienceList);
+        List<Audience> audienceList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getWorld().getName().equals(world.asString())) {
+                audienceList.add(new NativeAudienceAdapter(player));
+            }
+        }
+        return Audience.audience(audienceList);
     }
 
     @Override
@@ -78,7 +87,7 @@ public final class NativeBukkitAudienceProvider implements BukkitAudiences {
 
     @Override
     public @NotNull Audience sender(@NotNull CommandSender sender) {
-        return Audience.audience((Audience) sender);
+        return Audience.audience(new NativeAudienceAdapter(sender));
     }
 
     @Override
@@ -88,12 +97,16 @@ public final class NativeBukkitAudienceProvider implements BukkitAudiences {
 
     @Override
     public @NotNull Audience filter(@NotNull Predicate<CommandSender> filter) {
-        List<CommandSender> audienceList = new ArrayList<>(
-                Bukkit.getOnlinePlayers());
-        audienceList.add(Bukkit.getConsoleSender());
-        audienceList.removeIf(sender -> !filter.test(sender));
-        //noinspection unchecked
-        return Audience.audience((Collection) audienceList);
+        List<Audience> audienceList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (filter.test(player)) {
+                audienceList.add(new NativeAudienceAdapter(player));
+            }
+        }
+        if (filter.test(Bukkit.getConsoleSender())) {
+            audienceList.add(new NativeAudienceAdapter(Bukkit.getConsoleSender()));
+        }
+        return Audience.audience(audienceList);
     }
 
 }

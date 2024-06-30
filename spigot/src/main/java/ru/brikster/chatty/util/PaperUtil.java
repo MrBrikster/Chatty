@@ -21,8 +21,8 @@ public class PaperUtil {
 
     public boolean isSupportAdventure() {
         try {
-            //noinspection JavaReflectionMemberAccess
-            Player.class.getMethod("sendMessage", Class.forName("net.kyori.adventure.text.Component"));
+            // Concatenation to prevent shadow's relocation
+            Player.class.getMethod("sendMessage", Class.forName("net".concat(".kyori.adventure.text.Component")));
             return true;
         } catch (NoSuchMethodException | ClassNotFoundException e) {
             return false;

@@ -7,15 +7,16 @@ tasks {
     shadowJar {
         archiveFileName = "Chatty-${rootProject.version}.jar"
         destinationDirectory = rootProject.layout.buildDirectory.dir('libs')
-        def relocations = ['org.bstats',
-                           'com.google.gson',
-                           'com.google.guava',
-                           'com.google.common',
-                           'org.yaml.snakeyaml',
-                           'cloud.commandframework',
-//                           'eu.okaeri',
-                           'com.zaxxer',
-//                           'net.kyori'
+        def relocations = [
+                'org.bstats',
+                'com.google.gson',
+                'com.google.guava',
+                'com.google.common',
+                'org.yaml.snakeyaml',
+                'cloud.commandframework',
+//                'eu.okaeri',
+                'com.zaxxer',
+                'net.kyori'
         ]
         relocations.forEach {
             relocate it, "ru.brikster.chatty.shaded.${it}"
@@ -49,7 +50,6 @@ repositories {
     maven { url = "https://storehouse.okaeri.eu/repository/maven-public/" }
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url = 'https://repo.codemc.org/repository/maven-public' }
-
 }
 
 def okaeriVersion = '5a33076d8c'
