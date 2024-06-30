@@ -27,6 +27,7 @@ public final class NativeAudienceAdapter implements Audience {
             CacheBuilder.newBuilder()
                     .weakKeys()
                     .expireAfterAccess(Duration.ofMinutes(5))
+                    .maximumSize(1024)
                     .build();
 
     private static final String NET_KYORI_ADVENTURE = "net.".concat("kyori.adventure.");
