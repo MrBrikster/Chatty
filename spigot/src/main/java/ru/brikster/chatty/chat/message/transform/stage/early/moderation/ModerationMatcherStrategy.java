@@ -11,11 +11,9 @@ public interface ModerationMatcherStrategy extends MessageTransformStrategy<Stri
 
     default MessageTransformResult<String> getMatcherResult(MessageContext<String> context,
                                                             String matchedMessage,
-                                                            boolean messageMatches,
+                                                            boolean hasViolations,
                                                             boolean useBlock) {
-        if (messageMatches) {
-            return MessageTransformResultBuilder.<String>fromContext(context).build();
-        } else {
+        if (hasViolations) {
             if (useBlock) {
                 return MessageTransformResultBuilder.<String>fromContext(context)
                         .withMessage(matchedMessage)
@@ -26,6 +24,8 @@ public interface ModerationMatcherStrategy extends MessageTransformStrategy<Stri
                         .withMessage(matchedMessage)
                         .build();
             }
+        } else {
+            return MessageTransformResultBuilder.<String>fromContext(context).build();
         }
     }
 

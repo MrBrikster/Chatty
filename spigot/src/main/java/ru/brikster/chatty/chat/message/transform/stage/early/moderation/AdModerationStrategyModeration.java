@@ -5,6 +5,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.jetbrains.annotations.NotNull;
 import ru.brikster.chatty.api.chat.message.context.MessageContext;
 import ru.brikster.chatty.api.chat.message.strategy.result.MessageTransformResult;
+import ru.brikster.chatty.chat.message.transform.result.MessageTransformResultBuilder;
 import ru.brikster.chatty.config.file.MessagesConfig;
 import ru.brikster.chatty.config.file.ModerationConfig;
 import ru.brikster.chatty.config.file.ModerationConfig.AdvertisementModerationConfig;
@@ -44,12 +45,19 @@ public final class AdModerationStrategyModeration implements ModerationMatcherSt
 
     @Override
     public @NotNull MessageTransformResult<String> handle(MessageContext<String> context) {
+        if (context.getSender().hasPermission("chatty.moderation.ads.bypass")
+                || context.getSender().hasPermission("chatty.moderation.bypass")) {
+            return MessageTransformResultBuilder
+                    .<String>fromContext(context)
+                    .build();
+        }
+
         String message = context.getMessage();
         String matchedMessage = match(message, ipPattern);
         matchedMessage = match(matchedMessage, webPattern);
 
         boolean hasViolations = !message.equals(matchedMessage);
-        MessageTransformResult<String> messageTransformResult = getMatcherResult(context, matchedMessage, !hasViolations, useBlock);
+        MessageTransformResult<String> messageTransformResult = getMatcherResult(context, matchedMessage, hasViolations, useBlock);
 
         if (hasViolations) {
             audiences.player(context.getSender()).sendMessage(messages.getAdvertisementFound());

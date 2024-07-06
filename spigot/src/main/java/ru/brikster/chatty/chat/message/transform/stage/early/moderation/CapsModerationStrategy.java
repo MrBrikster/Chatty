@@ -36,6 +36,13 @@ public final class CapsModerationStrategy implements MessageTransformStrategy<St
 
     @Override
     public @NotNull MessageTransformResult<String> handle(MessageContext<String> context) {
+        if (context.getSender().hasPermission("chatty.moderation.caps.bypass")
+                || context.getSender().hasPermission("chatty.moderation.bypass")) {
+            return MessageTransformResultBuilder
+                    .<String>fromContext(context)
+                    .build();
+        }
+
         String message = context.getMessage();
 
         if (message.length() >= length
