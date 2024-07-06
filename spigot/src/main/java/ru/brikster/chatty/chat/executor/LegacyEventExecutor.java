@@ -6,7 +6,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -30,10 +29,10 @@ import ru.brikster.chatty.chat.style.ChatStylePlayerGrouper;
 import ru.brikster.chatty.config.file.MessagesConfig;
 import ru.brikster.chatty.config.file.SettingsConfig;
 import ru.brikster.chatty.proxy.ProxyService;
+import ru.brikster.chatty.util.EventUtil;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -178,16 +177,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                     List.copyOf(middleContext.getRecipients())
             );
 
-            Runnable callEventRunnable = () -> Bukkit.getPluginManager().callEvent(preMessageEvent);
-            if (Bukkit.isPrimaryThread()) {
-                CompletableFuture.runAsync(callEventRunnable)
-                        .exceptionally(e -> {
-                            logger.log(Level.SEVERE, "Error while calling ChattyPreMessageEvent", e);
-                            return null;
-                        });
-            } else {
-                callEventRunnable.run();
-            }
+            EventUtil.callAsynchronously(preMessageEvent);
 
             middleContext.setFormat(preMessageEvent.getFormat());
             middleContext.setMessage(preMessageEvent.getMessage());
@@ -201,7 +191,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                     List.copyOf(middleContext.getRecipients())
             );
 
-            Bukkit.getPluginManager().callEvent(messageEvent);
+            EventUtil.callAsynchronously(messageEvent);
 
             if (middleContext.getChat().getSound() != null) {
                 for (Player recipient : middleContext.getRecipients()) {
