@@ -11,6 +11,7 @@ tasks {
                 'org.bstats',
                 'com.google.gson',
                 'com.google.guava',
+                'com.google.inject',
                 'com.google.common',
                 'org.yaml.snakeyaml',
                 'cloud.commandframework',
