@@ -29,8 +29,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.brikster.chatty.adventure.NativeBukkitAudienceProvider;
 import ru.brikster.chatty.api.ChattyApiImpl;
 import ru.brikster.chatty.api.event.ChattyInitEvent;
@@ -70,7 +68,6 @@ import java.util.logging.Level;
 
 public final class Chatty extends JavaPlugin {
 
-    private static final Logger log = LoggerFactory.getLogger(Chatty.class);
     private final Map<String, ProxyingCommandHandler<CommandSender>> proxyingCommandHandlerMap = new ConcurrentHashMap<>();
 
     private Injector injector;
@@ -140,7 +137,7 @@ public final class Chatty extends JavaPlugin {
 
     private void initialize() throws Exception {
         BukkitAudiences audiences;
-        if (PaperUtil.isPaper() && PaperUtil.isSupportAdventure()) {
+        if (isUseNativeAdventurePlatform()) {
             getLogger().log(Level.INFO, "Using native Adventure audience provider");
             audiences = new NativeBukkitAudienceProvider();
         } else {
@@ -207,7 +204,9 @@ public final class Chatty extends JavaPlugin {
 
         if (this.asyncCommandManager == null) {
             initAsyncCommandManager();
-            if (pmConfig.isEnable()) registerPmCommands(commandSuggestionsProvider);
+            if (pmConfig.isEnable()) {
+                registerPmCommands(commandSuggestionsProvider);
+            }
             registerIgnoreCommand(commandSuggestionsProvider);
             registerClearChatCommand();
         }
@@ -216,7 +215,9 @@ public final class Chatty extends JavaPlugin {
     }
 
     private void closeResources() throws IOException {
-        BukkitAudiences.create(this).close();
+        if (!isUseNativeAdventurePlatform()) {
+            BukkitAudiences.create(this).close();
+        }
         injector.getInstance(PlayerDataRepository.class).close();
         injector.getInstance(ProxyService.class).close();
         ListenerUtil.unregister(PlayerJoinEvent.class, this);
@@ -351,6 +352,10 @@ public final class Chatty extends JavaPlugin {
             //noinspection DataFlowIssue
             commandManager.deleteRootCommand(node.getValue().getName());
         }
+    }
+
+    private static boolean isUseNativeAdventurePlatform() {
+        return PaperUtil.isPaper() && PaperUtil.isSupportAdventure();
     }
 
 }
