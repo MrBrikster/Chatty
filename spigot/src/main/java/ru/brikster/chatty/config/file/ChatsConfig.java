@@ -146,7 +146,7 @@ public class ChatsConfig extends OkaeriConfig {
         @Comment({
               "",
               "Cooldown in seconds for sending messages in chat.",
-              "Bypass permission: chatty.cooldown.<chat>"
+              "Bypass permission: chatty.bypass.cooldown.<chat>"
         })
         @Min(0)
         private int cooldown = 0;
