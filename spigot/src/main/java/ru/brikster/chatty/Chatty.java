@@ -337,7 +337,6 @@ public final class Chatty extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.getServer().getScheduler().cancelTasks(this);
         unregisterAllCommands(syncCommandManager);
         unregisterAllCommands(asyncCommandManager);
         try {
