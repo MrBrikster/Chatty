@@ -55,7 +55,7 @@ import ru.brikster.chatty.pm.ignore.RemoveIgnoreCommandHandler;
 import ru.brikster.chatty.proxy.ProxyService;
 import ru.brikster.chatty.repository.player.PlayerDataRepository;
 import ru.brikster.chatty.util.AdventureUtil;
-import ru.brikster.chatty.util.ListenerUtil;
+import ru.brikster.chatty.util.EventUtil;
 import ru.brikster.chatty.util.PaperUtil;
 
 import java.io.IOException;
@@ -220,10 +220,10 @@ public final class Chatty extends JavaPlugin {
         }
         injector.getInstance(PlayerDataRepository.class).close();
         injector.getInstance(ProxyService.class).close();
-        ListenerUtil.unregister(PlayerJoinEvent.class, this);
-        ListenerUtil.unregister(PlayerQuitEvent.class, this);
-        ListenerUtil.unregister(PlayerDeathEvent.class, this);
-        ListenerUtil.unregister(AsyncPlayerChatEvent.class, this);
+        EventUtil.unregisterListeners(PlayerJoinEvent.class, this);
+        EventUtil.unregisterListeners(PlayerQuitEvent.class, this);
+        EventUtil.unregisterListeners(PlayerDeathEvent.class, this);
+        EventUtil.unregisterListeners(AsyncPlayerChatEvent.class, this);
         notificationTicker.cancelTicking();
     }
 
