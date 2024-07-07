@@ -59,8 +59,9 @@ def cloudVersion = '1.8.4'
 //noinspection VulnerableLibrariesLocal
 dependencies {
     api project(':api')
-    api 'com.google.code.gson:gson:2.9.0'
-    api 'org.bstats:bstats-bukkit:3.0.0'
+
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'org.bstats:bstats-bukkit:3.0.2'
 
     implementation "com.github.Brikster.okaeri-configs:okaeri-configs-yaml-snakeyaml:$okaeriVersion"
     implementation "com.github.Brikster.okaeri-configs:okaeri-configs-serdes-commons:$okaeriVersion"

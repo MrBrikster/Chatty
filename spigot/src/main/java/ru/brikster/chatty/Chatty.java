@@ -43,6 +43,7 @@ import ru.brikster.chatty.config.file.PmConfig;
 import ru.brikster.chatty.config.file.SettingsConfig;
 import ru.brikster.chatty.guice.ConfigsLoader;
 import ru.brikster.chatty.guice.GeneralGuiceModule;
+import ru.brikster.chatty.metrics.MetricsSender;
 import ru.brikster.chatty.misc.VanillaListener;
 import ru.brikster.chatty.notification.NotificationTicker;
 import ru.brikster.chatty.papi.PapiExpansionInstaller;
@@ -212,6 +213,10 @@ public final class Chatty extends JavaPlugin {
         }
 
         ChattyApiImpl.updateInstance(new ChattyApiImpl(injector.getInstance(ChatRegistry.class).getChats()));
+
+        MetricsSender metricsSender = new MetricsSender();
+        injector.injectMembers(metricsSender);
+        metricsSender.run();
     }
 
     private void closeResources() throws IOException {

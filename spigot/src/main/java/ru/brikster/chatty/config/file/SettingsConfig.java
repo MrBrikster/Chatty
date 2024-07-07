@@ -81,6 +81,9 @@ public class SettingsConfig extends OkaeriConfig {
     @Comment({"", "Enable debug messages"})
     private boolean debug = false;
 
+    @Comment({"", "Enable BStats metrics (anonymous)"})
+    private boolean sendMetrics = true;
+
     public enum RelationalPlaceholdersOrder {
         SENDER_AND_TARGET,
         TARGET_AND_SENDER
