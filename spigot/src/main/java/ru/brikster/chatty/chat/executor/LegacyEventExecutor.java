@@ -139,8 +139,10 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
 
         MessageContext<String> earlyContext = pendingMessages.remove(eventHashcode);
         if (earlyContext == null) {
-            logger.log(Level.WARNING, "Cannot handle chat event from {0} with format {1} and message {2} due to hashcode idempotency error",
-                    new Object[] { event.getPlayer().getName(), event.getFormat(), event.getMessage() });
+            if (settings.isDebug()) {
+                logger.log(Level.WARNING, "Cannot handle unprocessed chat event from \"{0}\" with format \"{1}\" and message \"{2}\"",
+                        new Object[]{event.getPlayer().getName(), event.getFormat(), event.getMessage()});
+            }
             return;
         }
 
