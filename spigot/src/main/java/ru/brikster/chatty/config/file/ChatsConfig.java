@@ -45,16 +45,16 @@ public class ChatsConfig extends OkaeriConfig {
                 new ChatSpyConfig(true, "&6[Spy (local)] &r{prefix}{player}{suffix}&8: &f{message}")));
         put("global", new ChatConfig(
                 "Global",
-                "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&6Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &f{message}",
-                "{original-message}",
+                "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&6Global</click></hover>&7] &r{prefix}{player}{suffix}&8: {message}",
+                "&f{original-message}",
                 new HashMap<>() {{
                     put("red", new ChatStyleConfig(
-                            "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&4Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &c{message}",
+                            "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&4Global</click></hover>&7] &r{prefix}{player}{suffix}&8: {message}",
                             "<gradient:#B14444:#972929>{original-message}</gradient>",
                             10
                     ));
                     put("green", new ChatStyleConfig(
-                            "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&2Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &a{message}",
+                            "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&2Global</click></hover>&7] &r{prefix}{player}{suffix}&8: {message}",
                             "<gradient:#15B120:#19C224>{original-message}</gradient>",
                             20
                     ));
