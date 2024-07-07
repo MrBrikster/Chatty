@@ -28,4 +28,8 @@ public interface PlayerDataRepository extends Closeable {
 
     boolean isIgnoredPlayer(@NotNull UUID playerUuid, @NotNull UUID uuid);
 
+    boolean isEnableSpy(@NotNull UUID playerUuid);
+
+    void setEnableSpy(@NotNull UUID playerUuid, boolean spy);
+
 }

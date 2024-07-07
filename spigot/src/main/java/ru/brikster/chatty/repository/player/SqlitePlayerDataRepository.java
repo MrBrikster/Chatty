@@ -212,6 +212,35 @@ public final class SqlitePlayerDataRepository implements PlayerDataRepository {
     }
 
     @Override
+    public boolean isEnableSpy(@NotNull UUID playerUuid) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT spy " +
+                             "FROM users " +
+                             "WHERE uuid = ?")) {
+            statement.setBytes(1, SqliteUtil.fromUUID(playerUuid));
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getBoolean("spy");
+        } catch (SQLException sqlException) {
+            throw new IllegalStateException("Cannot check player spy mode", sqlException);
+        }
+    }
+
+    @Override
+    public void setEnableSpy(@NotNull UUID playerUuid, boolean spy) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "UPDATE users SET spy = ? WHERE uuid = ?")) {
+            statement.setBoolean(1, spy);
+            statement.setBytes(2, SqliteUtil.fromUUID(playerUuid));
+            statement.executeUpdate();
+        } catch (SQLException sqlException) {
+            throw new IllegalStateException("Cannot update player spy mode", sqlException);
+        }
+    }
+
+    @Override
     public void close() {
         dataSource.close();
     }

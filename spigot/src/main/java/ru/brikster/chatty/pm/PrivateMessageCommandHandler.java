@@ -62,6 +62,7 @@ public final class PrivateMessageCommandHandler {
                     sender, target, message);
             audiences.filter(spyCandidate -> spyCandidate.hasPermission("chatty.spy.pm")
                             && !(spyCandidate instanceof ConsoleCommandSender)
+                            && playerDataRepository.isEnableSpy(((Player) spyCandidate).getUniqueId())
                             && spyCandidate != sender
                             && (!target.isOnline() || spyCandidate != target.asCommandSender()))
                     .sendMessage(spyComponentFormat);

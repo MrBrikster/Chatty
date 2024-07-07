@@ -208,6 +208,35 @@ public final class MysqlPlayerDataRepository implements PlayerDataRepository {
     }
 
     @Override
+    public boolean isEnableSpy(@NotNull UUID playerUuid) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT spy " +
+                             "FROM chatty_users " +
+                             "WHERE uuid = ?")) {
+            statement.setString(1, playerUuid.toString());
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getBoolean("spy");
+        } catch (SQLException sqlException) {
+            throw new IllegalStateException("Cannot check player spy mode", sqlException);
+        }
+    }
+
+    @Override
+    public void setEnableSpy(@NotNull UUID playerUuid, boolean spy) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "UPDATE chatty_users SET spy = ? WHERE uuid = ?")) {
+            statement.setBoolean(1, spy);
+            statement.setString(2, playerUuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException sqlException) {
+            throw new IllegalStateException("Cannot update player spy mode", sqlException);
+        }
+    }
+
+    @Override
     public void close() {
         dataSource.close();
     }

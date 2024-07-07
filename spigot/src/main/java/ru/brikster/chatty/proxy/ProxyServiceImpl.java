@@ -24,6 +24,7 @@ import ru.brikster.chatty.config.file.PmConfig;
 import ru.brikster.chatty.proxy.data.ChatMessage;
 import ru.brikster.chatty.proxy.data.PrivateMessage;
 import ru.brikster.chatty.proxy.data.ProxyPlayer;
+import ru.brikster.chatty.repository.player.PlayerDataRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,6 +56,7 @@ public final class ProxyServiceImpl implements ProxyService {
                             ChatRegistry chatRegistry,
                             PmConfig pmConfig,
                             ChatStylePlayerGrouper stylePlayerGrouper,
+                            PlayerDataRepository playerDataRepository,
                             Plugin plugin) {
         RedissonClient redissonClient = Redisson.create(redissonConfig);
         this.playersCache = redissonClient.getMapCache("chatty_players");
@@ -115,6 +117,7 @@ public final class ProxyServiceImpl implements ProxyService {
                     audiences.filter(spyCandidate ->
                                     spyCandidate.hasPermission("chatty.spy.pm")
                                             && !(spyCandidate instanceof ConsoleCommandSender)
+                                            && playerDataRepository.isEnableSpy(((Player) spyCandidate).getUniqueId())
                                             && !spyCandidate.getName().equalsIgnoreCase(redisMessage.getTargetName()))
                             .sendMessage(spyMessage);
                 }

@@ -5,6 +5,7 @@ import cloud.commandframework.Command.Builder;
 import cloud.commandframework.CommandManager.ManagerSettings;
 import cloud.commandframework.CommandTree.Node;
 import cloud.commandframework.arguments.CommandArgument;
+import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.exceptions.ArgumentParseException;
@@ -23,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -38,6 +40,7 @@ import ru.brikster.chatty.command.CommandSuggestionsProvider;
 import ru.brikster.chatty.command.ProxyingCommandHandler;
 import ru.brikster.chatty.command.ProxyingCommandSuggestionsProvider;
 import ru.brikster.chatty.command.handler.ClearChatCommandHandler;
+import ru.brikster.chatty.command.handler.SpyCommandHandler;
 import ru.brikster.chatty.config.file.MessagesConfig;
 import ru.brikster.chatty.config.file.PmConfig;
 import ru.brikster.chatty.config.file.SettingsConfig;
@@ -203,13 +206,16 @@ public final class Chatty extends JavaPlugin {
         ClearChatCommandHandler clearChatCommandHandler = injector.getInstance(ClearChatCommandHandler.class);
         registerProxyingHandler("clearchat", clearChatCommandHandler);
 
+        SpyCommandHandler spyCommandHandler = injector.getInstance(SpyCommandHandler.class);
+        registerProxyingHandler("spy", spyCommandHandler);
+
         if (this.asyncCommandManager == null) {
             initAsyncCommandManager();
             if (pmConfig.isEnable()) {
                 registerPmCommands(commandSuggestionsProvider);
             }
             registerIgnoreCommand(commandSuggestionsProvider);
-            registerClearChatCommand();
+            registerMiscCommands();
         }
 
         ChattyApiImpl.updateInstance(new ChattyApiImpl(injector.getInstance(ChatRegistry.class).getChats()));
@@ -265,13 +271,24 @@ public final class Chatty extends JavaPlugin {
         asyncCommandManager.setSetting(ManagerSettings.ALLOW_UNSAFE_REGISTRATION, true);
     }
 
-    private void registerClearChatCommand() {
-        var command = asyncCommandManager
+    private void registerMiscCommands() {
+        var clearChatCommand = asyncCommandManager
                 .commandBuilder("clearchat")
                 .permission("chatty.command.clearchat")
                 .handler(proxyingCommandHandlerMap.get("clearchat"))
                 .build();
-        asyncCommandManager.command(command);
+        asyncCommandManager.command(clearChatCommand);
+
+        var spyCommand = asyncCommandManager
+                .commandBuilder("spy")
+                .senderType(Player.class)
+                .permission("chatty.command.spy")
+                .argument(BooleanArgument.<CommandSender>builder("state")
+                        .withLiberal(true)
+                        .build())
+                .handler(proxyingCommandHandlerMap.get("spy"))
+                .build();
+        asyncCommandManager.command(spyCommand);
     }
 
     private void registerIgnoreCommand(CommandSuggestionsProvider<CommandSender> pmSuggestionsProvider) {
