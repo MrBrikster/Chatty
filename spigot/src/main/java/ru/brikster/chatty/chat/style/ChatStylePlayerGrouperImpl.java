@@ -12,10 +12,10 @@ import java.util.*;
 public final class ChatStylePlayerGrouperImpl implements ChatStylePlayerGrouper {
 
     @Override
-    public @NotNull ChatStylePlayerGrouper.Groping makeGrouping(@NotNull Collection<? extends @NotNull Player> recipients,
-                                                                @NotNull Set<@NotNull ChatStyle> styles,
-                                                                @Nullable Collection<? extends @NotNull Player> spies,
-                                                                @Nullable ChatStyle spyStyle) {
+    public @NotNull ChatStylePlayerGrouper.Grouping makeGrouping(@NotNull Collection<? extends @NotNull Player> recipients,
+                                                                 @NotNull Set<@NotNull ChatStyle> styles,
+                                                                 @Nullable Collection<? extends @NotNull Player> spies,
+                                                                 @Nullable ChatStyle spyStyle) {
         Map<Player, ChatStyle> playerStyleMap = new HashMap<>();
 
         for (ChatStyle style : styles) {
@@ -53,7 +53,7 @@ public final class ChatStylePlayerGrouperImpl implements ChatStylePlayerGrouper 
             }
         }
 
-        return new Groping(noStyleRecipients, stylePlayersMap);
+        return new Grouping(noStyleRecipients, stylePlayersMap);
     }
 
 }

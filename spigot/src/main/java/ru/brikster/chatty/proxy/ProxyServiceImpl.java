@@ -19,7 +19,7 @@ import ru.brikster.chatty.api.chat.Chat;
 import ru.brikster.chatty.api.chat.ChatStyle;
 import ru.brikster.chatty.chat.registry.ChatRegistry;
 import ru.brikster.chatty.chat.style.ChatStylePlayerGrouper;
-import ru.brikster.chatty.chat.style.ChatStylePlayerGrouper.Groping;
+import ru.brikster.chatty.chat.style.ChatStylePlayerGrouper.Grouping;
 import ru.brikster.chatty.config.file.PmConfig;
 import ru.brikster.chatty.proxy.data.ChatMessage;
 import ru.brikster.chatty.proxy.data.PrivateMessage;
@@ -77,10 +77,11 @@ public final class ProxyServiceImpl implements ProxyService {
                     .stream()
                     .map(entry -> new ChatStyle(entry.getKey(),
                             GSON_COMPONENT_SERIALIZER.deserialize(entry.getValue().getComponentJson()),
+                            entry.getValue().getMessageFormat(),
                             entry.getValue().getPriority()))
                     .collect(Collectors.toSet());
 
-            Groping grouping = stylePlayerGrouper.makeGrouping(recipients, styles, null, null);
+            Grouping grouping = stylePlayerGrouper.makeGrouping(recipients, styles, null, null);
 
             Sound sound = redisMessage.getSound();
 

@@ -32,6 +32,7 @@ public class ChatsConfig extends OkaeriConfig {
         put("local", new ChatConfig(
                 "Local",
                 "&7[<hover:show_text:'&bRange: 200 blocks'>&bLocal</hover>&7] &r{prefix}{player}{suffix}&8: &f{message}",
+                "{original-message}",
                 new HashMap<>(),
                 "",
                 200,
@@ -45,13 +46,16 @@ public class ChatsConfig extends OkaeriConfig {
         put("global", new ChatConfig(
                 "Global",
                 "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&6Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &f{message}",
+                "{original-message}",
                 new HashMap<>() {{
                     put("red", new ChatStyleConfig(
                             "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&4Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &c{message}",
+                            "<gradient:#B14444:#972929>{original-message}</gradient>",
                             10
                     ));
                     put("green", new ChatStyleConfig(
                             "&7[<hover:show_text:'&aUse &2&l! &afor global chat'><click:suggest_command:!>&2Global</click></hover>&7] &r{prefix}{player}{suffix}&8: &a{message}",
+                            "<gradient:#15B120:#19C224>{original-message}</gradient>",
                             20
                     ));
                 }},
@@ -91,6 +95,12 @@ public class ChatsConfig extends OkaeriConfig {
                 "You can use replacements from \"replacements.yml\" here."
         })
         private String format = "<{player}>: {message}";
+
+        @Comment({"",
+            "Player message format (\"{message}\" part in \"format\" property).",
+            "You can use gradient here to make player messages colorful.",
+            "This part renders as if player message were explicitly written in MiniMessage component"})
+        private String messageFormat = "{original-message}";
 
         @Comment({"",
                 "Custom format styles. Players that have permission",
@@ -172,6 +182,10 @@ public class ChatsConfig extends OkaeriConfig {
 
         @Comment({"Custom format for the style"})
         private String format = "<{player}>: {message}";
+
+        @Comment({"",
+                "Custom message format for the style"})
+        private String messageFormat = "{original-message}";
 
         @Comment({"",
                 "If player has several permissions, chat with higher priority will be selected"})

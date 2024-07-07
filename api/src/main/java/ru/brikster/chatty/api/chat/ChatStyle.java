@@ -7,7 +7,13 @@ import net.kyori.adventure.text.Component;
 @Value
 @Accessors(fluent = true)
 public class ChatStyle {
+
     String id;
+
     Component format;
+
+    String messageFormat;
+
     int priority;
+
 }

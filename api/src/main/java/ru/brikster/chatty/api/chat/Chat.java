@@ -40,6 +40,9 @@ public interface Chat {
     @NotNull
     Component getFormat();
 
+    @NotNull
+    String getMessageFormat();
+
     @NotNull Set<ChatStyle> getStyles();
 
     @NotNull String getSymbol();

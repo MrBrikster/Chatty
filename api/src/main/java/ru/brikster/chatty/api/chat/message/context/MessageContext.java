@@ -21,6 +21,11 @@ public interface MessageContext<MessageT> {
     void setFormat(@NotNull Component component);
 
     @NotNull
+    String getMessageFormat();
+
+    void setMessageFormat(@NotNull String messageFormat);
+
+    @NotNull
     Collection<? extends @NotNull Player> getRecipients();
 
     void setRecipients(@NotNull Collection<? extends @NotNull Player> recipients);

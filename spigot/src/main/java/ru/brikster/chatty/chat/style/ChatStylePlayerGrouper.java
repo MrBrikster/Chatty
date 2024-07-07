@@ -14,14 +14,14 @@ import java.util.Set;
 public interface ChatStylePlayerGrouper {
 
     @Value
-    class Groping {
+    class Grouping {
         List<Player> noStylePlayers;
         Map<ChatStyle, List<Player>> stylesMap;
     }
 
-    @NotNull ChatStylePlayerGrouper.Groping makeGrouping(@NotNull Collection<? extends @NotNull Player> recipients,
-                                                         @NotNull Set<@NotNull ChatStyle> styles,
-                                                         @Nullable Collection<? extends @NotNull Player> spies,
-                                                         @Nullable ChatStyle spyStyle);
+    @NotNull ChatStylePlayerGrouper.Grouping makeGrouping(@NotNull Collection<? extends @NotNull Player> recipients,
+                                                          @NotNull Set<@NotNull ChatStyle> styles,
+                                                          @Nullable Collection<? extends @NotNull Player> spies,
+                                                          @Nullable ChatStyle spyStyle);
 
 }

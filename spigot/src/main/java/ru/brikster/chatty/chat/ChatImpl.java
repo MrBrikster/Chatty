@@ -35,6 +35,9 @@ public final class ChatImpl implements Chat {
     private final @NotNull Component format;
 
     @Getter
+    private final @NotNull String messageFormat;
+
+    @Getter
     private final @NotNull String symbol;
 
     @Getter

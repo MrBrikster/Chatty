@@ -127,6 +127,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                 new HashMap<>(),
                 event.isCancelled(),
                 chat == null ? Component.text("") : chat.getFormat(),
+                chat == null ? "{original-message}" : chat.getMessageFormat(),
                 recipients,
                 event.getMessage(),
                 null);
@@ -173,6 +174,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                     middleContext.getChat(),
                     middleContext.getChat().getStyles(),
                     middleContext.getFormat(),
+                    middleContext.getMessageFormat(),
                     middleContext.getMessage(),
                     List.copyOf(middleContext.getRecipients())
             );
@@ -180,6 +182,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
             EventUtil.callAsynchronously(preMessageEvent);
 
             middleContext.setFormat(preMessageEvent.getFormat());
+            middleContext.setMessageFormat(preMessageEvent.getMessageFormat());
             middleContext.setMessage(preMessageEvent.getMessage());
 
             Set<ChatStyle> styles = preMessageEvent.getStyles();
@@ -254,6 +257,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
 
         MessageContext<Component> proxyNoStyleContext = new MessageContextImpl<>(middleContext);
         proxyNoStyleContext.setFormat(chat.getFormat());
+        proxyNoStyleContext.setMessageFormat(chat.getMessageFormat());
         proxyNoStyleContext.setMessage(middleContext.getMessage());
         proxyNoStyleContext.setRecipients(Collections.emptyList());
         MessageContext<Component> proxyNoStyleLateContext = processor.handle(proxyNoStyleContext, Stage.LATE).getNewContext();
@@ -262,6 +266,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
         for (var style : chat.getStyles()) {
             MessageContext<Component> proxyStyleContext = new MessageContextImpl<>(middleContext);
             proxyStyleContext.setFormat(style.format());
+            proxyStyleContext.setMessageFormat(style.messageFormat());
             proxyStyleContext.setMessage(middleContext.getMessage());
             proxyStyleContext.setRecipients(Collections.emptyList());
             MessageContext<Component> proxyLateContext = processor.handle(proxyStyleContext, Stage.LATE).getNewContext();
@@ -269,7 +274,8 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
 
             proxyStyles.put(style.id(), new ru.brikster.chatty.proxy.data.ChatStyle(
                     style.priority(),
-                    GsonComponentSerializer.gson().serialize(message)
+                    GsonComponentSerializer.gson().serialize(message),
+                    proxyLateContext.getMessageFormat()
             ));
         }
 
@@ -307,6 +313,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                 useSpy ? new ChatStyle(
                         "internal-spy-style",
                         chat.getSpyFormat(),
+                        chat.getMessageFormat(),
                         Integer.MAX_VALUE) : null);
 
         Map<ChatStyle, List<Player>> stylePlayersMap = grouping.getStylesMap();
@@ -323,6 +330,7 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
         stylePlayersMap.forEach((style, recipients) -> {
             MessageContext<Component> styleContext = new MessageContextImpl<>(context);
             styleContext.setFormat(style.format());
+            styleContext.setMessageFormat(style.messageFormat());
             styleContext.setMessage(context.getMessage());
             styleContext.setRecipients(recipients);
             contexts.add(styleContext);

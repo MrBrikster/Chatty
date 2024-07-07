@@ -23,6 +23,7 @@ public final class MessageContextImpl<MessageT> implements MessageContext<Messag
     private final @NotNull Map<String, Object> metadata;
     private boolean cancelled;
     private @NotNull Component format;
+    private @NotNull String messageFormat;
     private @NotNull Collection<? extends @NotNull Player> recipients;
     private MessageT message;
     private @Nullable Player target;
@@ -30,6 +31,7 @@ public final class MessageContextImpl<MessageT> implements MessageContext<Messag
     public MessageContextImpl(MessageContext<?> context) {
         this.cancelled = context.isCancelled();
         this.format = context.getFormat();
+        this.messageFormat = context.getMessageFormat();
         this.recipients = new ArrayList<>(context.getRecipients());
         this.chat = context.getChat();
         this.sender = context.getSender();

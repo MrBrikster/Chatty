@@ -26,7 +26,9 @@ public final class ConfigsLoader {
                              ComponentStringConverter componentConverter) {
         config.getChats().forEach((chatId, chatConfig) -> {
             Chat chat = new ChatImpl(chatId,
-                    chatConfig.getDisplayName(), componentConverter.stringToComponent(chatConfig.getFormat()),
+                    chatConfig.getDisplayName(),
+                    componentConverter.stringToComponent(chatConfig.getFormat()),
+                    chatConfig.getMessageFormat(),
                     chatConfig.getSymbol(), null, chatConfig.getRange(), chatConfig.isPermissionRequired(),
                     chatConfig
                             .getStyles()
@@ -34,6 +36,7 @@ public final class ConfigsLoader {
                             .stream()
                             .map(styleEntry -> new ChatStyle(styleEntry.getKey(),
                                     componentConverter.stringToComponent(styleEntry.getValue().getFormat()),
+                                    styleEntry.getValue().getMessageFormat(),
                                     styleEntry.getValue().getPriority()))
                             .collect(Collectors.toSet()),
                     chatConfig.isNotifyNobodyHeard(),

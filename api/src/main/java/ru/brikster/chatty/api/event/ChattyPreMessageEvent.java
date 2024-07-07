@@ -22,6 +22,7 @@ public final class ChattyPreMessageEvent extends Event {
     private final Chat chat;
     private Set<ChatStyle> styles;
     private Component format;
+    private String messageFormat;
     private Component message;
     private final List<Player> recipients;
 
@@ -29,6 +30,7 @@ public final class ChattyPreMessageEvent extends Event {
                                  @NotNull Chat chat,
                                  @NotNull Set<ChatStyle> styles,
                                  @NotNull Component format,
+                                 @NotNull String messageFormat,
                                  @NotNull Component message,
                                  @NotNull List<Player> recipients) {
         super(true);
@@ -36,6 +38,7 @@ public final class ChattyPreMessageEvent extends Event {
         this.chat = chat;
         this.styles = styles;
         this.format = format;
+        this.messageFormat = messageFormat;
         this.message = message;
         this.recipients = recipients;
     }
@@ -75,6 +78,16 @@ public final class ChattyPreMessageEvent extends Event {
     }
 
     /**
+     * Returns the message format
+     *
+     * @return message format
+     */
+    @NotNull
+    public String getMessageFormat() {
+        return messageFormat;
+    }
+
+    /**
      * Returns the message component, typed by player
      *
      * @return message component
@@ -94,6 +107,10 @@ public final class ChattyPreMessageEvent extends Event {
 
     public void setFormat(@NotNull Component format) {
         this.format = format;
+    }
+
+    public void setMessageFormat(@NotNull String messageFormat) {
+        this.messageFormat = messageFormat;
     }
 
     public void setMessage(@NotNull Component message) {
