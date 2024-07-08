@@ -222,9 +222,9 @@ public final class LegacyEventExecutor implements Listener, EventExecutor {
                 if (groupIndex == 0) {
                     String stringFormat = LegacyComponentSerializer.legacySection().serialize(lateContext.getFormat());
                     String stringMessage = LegacyComponentSerializer.legacySection().serialize(lateContext.getMessage());
+                    stringFormat = stringFormat.replaceFirst(Pattern.quote("{player}"), Matcher.quoteReplacement(lateContext.getSender().getDisplayName()));
+                    stringFormat = stringFormat.replaceFirst(Pattern.quote("{message}"), Matcher.quoteReplacement(stringMessage));
                     stringFormat = stringFormat.replace("%", "%%");
-                    stringFormat = stringFormat.replaceFirst(Pattern.quote("{player}"), Matcher.quoteReplacement("%1$s"));
-                    stringFormat = stringFormat.replaceFirst(Pattern.quote("{message}"), Matcher.quoteReplacement("%2$s"));
                     event.setFormat(stringFormat);
                     event.setMessage(stringMessage);
                 }

@@ -28,14 +28,12 @@ import org.yaml.snakeyaml.reader.StreamReader;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.resolver.Resolver;
 import ru.brikster.chatty.api.chat.message.strategy.MessageTransformStrategy;
-import ru.brikster.chatty.chat.component.impl.ChainPlaceholdersComponentTransformer;
-import ru.brikster.chatty.chat.component.impl.PlaceholdersComponentTransformer;
-import ru.brikster.chatty.chat.component.impl.RelationalPlaceholdersComponentTransformer;
-import ru.brikster.chatty.chat.component.impl.ReplacementsComponentTransformer;
+import ru.brikster.chatty.chat.component.impl.*;
 import ru.brikster.chatty.chat.component.impl.dummy.DummyPlaceholdersComponentTransformer;
 import ru.brikster.chatty.chat.component.impl.dummy.DummyRelationalPlaceholdersComponentTransformer;
 import ru.brikster.chatty.chat.component.impl.papi.CommonChatPlaceholderApiComponentTransformer;
 import ru.brikster.chatty.chat.component.impl.papi.PlaceholderApiRelationalComponentTransformer;
+import ru.brikster.chatty.chat.component.impl.papi.PlaceholderApiReplacementsStringTransformer;
 import ru.brikster.chatty.chat.component.impl.pm.placeholders.PmFromPlaceholderApiComponentTransformer;
 import ru.brikster.chatty.chat.component.impl.pm.placeholders.PmFromPlaceholdersComponentTransformer;
 import ru.brikster.chatty.chat.component.impl.pm.placeholders.PmToPlaceholderApiComponentTransformer;
@@ -284,8 +282,29 @@ public final class GeneralGuiceModule extends AbstractModule {
 
     @Provides
     @Singleton
+    public ReplacementsStringTransformer replacementsStringTransformer(ProxyConfig proxyConfig) {
+        List<ReplacementsStringTransformer> transformerList = new LinkedList<>();
+
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            transformerList.add(new PlaceholderApiReplacementsStringTransformer());
+        }
+
+        transformerList.add(new InternalPlaceholdersReplacementsStringTransformer());
+
+        return (sender, message) -> {
+            String result = message;
+            for (ReplacementsStringTransformer transformer : transformerList) {
+                result = transformer.transform(sender, result);
+            }
+            return result;
+        };
+    }
+
+    @Provides
+    @Singleton
     public PlaceholdersComponentTransformer placeholdersComponentTransformer(ReplacementsConfig replacementsConfig,
                                                                              ComponentStringConverter componentStringConverter,
+                                                                             ReplacementsStringTransformer replacementsStringTransformer,
                                                                              Logger logger) {
         List<PlaceholdersComponentTransformer> transformerList = new LinkedList<>();
 
@@ -297,7 +316,7 @@ public final class GeneralGuiceModule extends AbstractModule {
             }
         }
 
-        transformerList.add(new ReplacementsComponentTransformer(replacementsConfig, componentStringConverter, cycleAnalysisResult.getKeysWithCycles()));
+        transformerList.add(new ReplacementsComponentTransformer(replacementsConfig, componentStringConverter, replacementsStringTransformer, cycleAnalysisResult.getKeysWithCycles()));
 
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             transformerList.add(new CommonChatPlaceholderApiComponentTransformer(componentStringConverter));

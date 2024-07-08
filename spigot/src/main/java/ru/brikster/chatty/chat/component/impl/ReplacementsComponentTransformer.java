@@ -16,6 +16,7 @@ public final class ReplacementsComponentTransformer implements PlaceholdersCompo
 
     private final ReplacementsConfig replacementsConfig;
     private final ComponentStringConverter componentStringConverter;
+    private final ReplacementsStringTransformer replacementsStringTransformer;
     private final Set<String> cycledReplacements;
 
     @Override
@@ -28,7 +29,7 @@ public final class ReplacementsComponentTransformer implements PlaceholdersCompo
         do {
             matches[0] = 0;
             componentWithReplacements = AdventureUtil.replaceWithEndingSpace(componentWithReplacements, Constants.REPLACEMENTS_PATTERN, matchedString -> {
-                String result = replace(matchedString);
+                String result = replace(matchedString, context);
                 Component component = componentStringConverter.stringToComponent(result + " ");
                 if (result != null) {
                     matches[0]++;
@@ -36,7 +37,7 @@ public final class ReplacementsComponentTransformer implements PlaceholdersCompo
                 }
                 return null;
             }, matchedString -> {
-                String result = replace(matchedString);
+                String result = replace(matchedString, context);
                 if (result != null) {
                     matches[0]++;
                     return result;
@@ -48,10 +49,11 @@ public final class ReplacementsComponentTransformer implements PlaceholdersCompo
         return componentWithReplacements;
     }
 
-    private String replace(String matchedString) {
+    private String replace(String matchedString, SinglePlayerTransformContext context) {
         String replacementKey = matchedString.substring(3, matchedString.length() - 1);
         if (cycledReplacements.contains(replacementKey)) return null;
-        return replacementsConfig.getReplacements().get(replacementKey);
+        String replacementText = replacementsConfig.getReplacements().get(replacementKey);
+        return replacementsStringTransformer.transform(context.getPlayer(), replacementText);
     }
 
 }
