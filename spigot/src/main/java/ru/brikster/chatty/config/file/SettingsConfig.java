@@ -40,27 +40,46 @@ public class SettingsConfig extends OkaeriConfig {
     }, language = "ru-RU")
     private String language = "en-US";
 
-    @Comment({"",
+    @Comment(value = {"",
             "Chat listener priority",
             "May be useful if Chatty conflicts with another plugin",
-            "See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/EventPriority.html"})
+            "See https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/EventPriority.html"},
+            language = "en-US")
+    @Comment(value = {"",
+            "Приоритет слушателя чата",
+            "Может быть полезно, если Chatty конфликтует с другими плагинами",
+            "См. https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/EventPriority.html"},
+            language = "ru-RU")
     private EventPriority listenerPriority = EventPriority.LOW;
 
-    @Comment({"",
+    @Comment(value = {"",
             "Should Chatty keep modified recipients list, ",
             "got after previous event handlers? ",
             "For example: Essentials event handler called earlier ",
             "and removed some players due to ignore list"
-    })
+    }, language = "en-US")
+    @Comment(value = {"",
+            "Должен ли Chatty сохранять список получателей, ",
+            "полученный после обработки события другими плагинами?",
+            "Например: Essentials обрабатывает сообщение раньше",
+            "и удаляет некоторых игроков из игнор-листа"
+    }, language = "ru-RU")
     private boolean respectForeignRecipients = true;
 
-    @Comment({"",
-        "Should Chatty ignore vanished recipients?",
-        "This setting only affects \"no recipients\" message:",
-        "if true, and everybody is vanished, Chatty will send it.",
-        "Supports vanished players from Essentials and many others plugins, ",
-        "that hides players with native Bukkit mechanism"
-    })
+    @Comment(value = {"",
+            "Should Chatty ignore vanished recipients?",
+            "This setting only affects \"no recipients\" message:",
+            "if true, and everybody is vanished, Chatty will send it.",
+            "Supports vanished players from Essentials and many others plugins, ",
+            "that hides players with native Bukkit mechanism"
+    }, language = "en-US")
+    @Comment(value = {"",
+            "Должен ли Chatty игнорировать скрытых получателей?",
+            "Эта настройка влияет только на сообщение \"вас никто не услышал\":",
+            "при true, когда все получатели скрыты, отправитель получит это сообщение.",
+            "Поддерживает скрытых игроков из Essentials и многих других плагинов, ",
+            "которые использует механизм скрытия Bukkit"
+    }, language = "ru-RU")
     private boolean hideVanishedRecipients = true;
 
     @Comment({"",
