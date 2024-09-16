@@ -38,7 +38,7 @@ subprojects {
     }
 
     def adventureVersion = "4.17.0"
-    def adventureBukkitPlatformVersion = "4.3.3-SNAPSHOT"
+    def adventureBukkitPlatformVersion = "4.3.4"
 
     dependencies {
         compileOnlyApi 'org.jetbrains:annotations:17.0.0'
