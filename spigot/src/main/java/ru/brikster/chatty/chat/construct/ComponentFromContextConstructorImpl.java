@@ -1,9 +1,11 @@
 package ru.brikster.chatty.chat.construct;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ru.brikster.chatty.api.chat.message.context.MessageContext;
 import ru.brikster.chatty.convert.component.ComponentStringConverter;
+import ru.brikster.chatty.convert.message.LegacyToMiniMessageConverter;
 import ru.brikster.chatty.util.AdventureUtil;
 
 import javax.inject.Inject;
@@ -16,6 +18,9 @@ public final class ComponentFromContextConstructorImpl implements ComponentFromC
     @Inject
     private ComponentStringConverter componentStringConverter;
 
+    @Inject
+    private LegacyToMiniMessageConverter legacyToMiniMessageConverter;
+
     private static final Pattern PLAYER_OR_MESSAGE_PLACEHOLDER = Pattern.compile("\\{player}|\\{message}");
 
     private static final String PLAYER_FORMAT_PLACEHOLDER = "{player}";
@@ -24,9 +29,10 @@ public final class ComponentFromContextConstructorImpl implements ComponentFromC
     @Override
     public Component construct(MessageContext<Component> context) {
         String messageWithMmFormat = componentStringConverter.componentToString(context.getMessage());
-        String formattedMessage = context.getMessageFormat()
+        String convertedMessageFormat = legacyToMiniMessageConverter.convert(context.getMessageFormat());
+        String formattedMessage = convertedMessageFormat
                 .replace("{original-message}", messageWithMmFormat);
-        Component formattedMessageComponent = componentStringConverter.stringToComponent(formattedMessage);
+        Component formattedMessageComponent = MiniMessage.miniMessage().deserialize(formattedMessage);
 
         return AdventureUtil.replaceWithEndingSpace(context.getFormat(),
                 PLAYER_OR_MESSAGE_PLACEHOLDER,
