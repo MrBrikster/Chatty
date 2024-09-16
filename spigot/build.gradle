@@ -81,7 +81,7 @@ dependencies {
     }
 
     compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
-    compileOnly 'me.clip:placeholderapi:2.10.6'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'commons-io:commons-io:2.11.0'
 }
