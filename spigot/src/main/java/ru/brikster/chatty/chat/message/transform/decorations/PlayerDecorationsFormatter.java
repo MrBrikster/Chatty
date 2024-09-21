@@ -78,8 +78,11 @@ public final class PlayerDecorationsFormatter {
             }
         }
 
+        String messageToDeserialize = message;
+
         if (!sender.hasPermission("chatty.decoration.hex")) {
             componentSerializerBuilder.hexCharacter((char) 0);
+            messageToDeserialize = message.replaceAll("&[xX](&[a-fA-F0-9]){6}", "");
         } else {
             componentSerializerBuilder.hexColors();
         }
@@ -88,7 +91,7 @@ public final class PlayerDecorationsFormatter {
 
         return componentSerializerBuilder
                 .build()
-                .deserialize(message);
+                .deserialize(messageToDeserialize);
     }
 
 }
