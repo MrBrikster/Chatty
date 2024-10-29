@@ -221,7 +221,11 @@ public final class SqlitePlayerDataRepository implements PlayerDataRepository {
             statement.setBytes(1, SqliteUtil.fromUUID(playerUuid));
 
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.getBoolean("spy");
+            if (resultSet.next()) {
+                return resultSet.getBoolean("spy");
+            } else {
+                return false;
+            }
         } catch (SQLException sqlException) {
             throw new IllegalStateException("Cannot check player spy mode", sqlException);
         }

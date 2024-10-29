@@ -217,7 +217,11 @@ public final class MysqlPlayerDataRepository implements PlayerDataRepository {
             statement.setString(1, playerUuid.toString());
 
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.getBoolean("spy");
+            if (resultSet.next()) {
+                return resultSet.getBoolean("spy");
+            } else {
+                return false;
+            }
         } catch (SQLException sqlException) {
             throw new IllegalStateException("Cannot check player spy mode", sqlException);
         }
