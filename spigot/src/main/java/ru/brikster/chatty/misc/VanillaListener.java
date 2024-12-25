@@ -36,6 +36,9 @@ public final class VanillaListener implements Listener {
         if (!joinConfig.isEnable()) {
             return;
         }
+        if (event.getPlayer().hasMetadata("vanished")) {
+            return;
+        }
 
         Component joinMessage;
         if (event.getPlayer().hasPlayedBefore() || !joinConfig.getFirstJoin().isEnable()) {
@@ -77,6 +80,9 @@ public final class VanillaListener implements Listener {
         if (!quitConfig.isEnable()) {
             return;
         }
+        if (event.getPlayer().hasMetadata("vanished")) {
+            return;
+        }
 
         Component quitMessage = quitConfig.getMessage();
 
@@ -106,6 +112,9 @@ public final class VanillaListener implements Listener {
         DeathVanillaConfig deathConfig = vanillaConfig.getDeath();
 
         if (!deathConfig.isEnable()) {
+            return;
+        }
+        if (event.getEntity().hasMetadata("vanished")) {
             return;
         }
 
