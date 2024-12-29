@@ -120,9 +120,9 @@ public class MentionsTransformStrategy implements MessageTransformStrategy<Compo
 
     private Pattern patternForPlayer(Player player) {
         try {
-            return playerPatternCache.get(player, () ->
-                    Pattern.compile(settingsConfig.getMentions().getPattern().replace("{username}",
-                            player.getDisplayName())));
+            String patternString = settingsConfig.getMentions().getPattern()
+                    .replace("{username}", Pattern.quote(player.getDisplayName()));
+            return playerPatternCache.get(player, () -> Pattern.compile(patternString));
         } catch (ExecutionException e) {
             throw new IllegalStateException("Cannot compile mention pattern", e);
         }
